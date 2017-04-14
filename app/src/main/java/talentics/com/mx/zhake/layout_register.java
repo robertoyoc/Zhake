@@ -3,6 +3,7 @@ package talentics.com.mx.zhake;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -81,6 +82,10 @@ public class layout_register extends AppCompatActivity implements LoaderCallback
                 return false;
             }
         });
+        Intent intent = getIntent();
+        String message = intent.getStringExtra(Intent.EXTRA_TEXT);
+        TextView text = (TextView) findViewById(R.id.textView);
+        text.setText(message);
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
