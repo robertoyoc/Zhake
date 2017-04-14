@@ -19,6 +19,24 @@
         completions."
     </string>
     <string name="hypervinc">¿Olvidaste tu contraseña?</string>
+    
+    <!-- Strings related to Register -->
     <string name="title_activity_layout_register">Registrar</string>
+
+    <string name="inf_user">Información del Usuario</string>
+    <string name="inf_house">Dirección</string>
+
+
+    <string name="prompt_fname">Nombre</string>
+    <string name="prompt_lname">Apellido</string>
+    <string name="prompt_age">Edad</string>
+    <string name="prompt_sex">Sexo (M o F)</string>
+    <string name="prompt_street">Calle</string>
+    <string name="prompt_num">Número</string>
+    <string name="prompt_col">Colonia</string>
+    <string name="prompt_city">Ciudad</string>
+    <string name="prompt_state">Estado</string>
+    <string name="prompt_cp">Código Postal</string>
+
 
 </resources>
