@@ -3,7 +3,6 @@ package talentics.com.mx.zhake;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -30,8 +29,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +37,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class layout_login extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class layout_register extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -68,7 +65,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.l_login);
+        setContentView(R.layout.activity_layout_register);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
@@ -93,20 +90,8 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             }
         });
 
-        Button mRegisterButton = (Button) findViewById(R.id.register_button);
-        mRegisterButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callRegister();
-            }
-        });
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-    }
-    private void callRegister(){
-        Intent intent = new Intent(this, layout_register.class);
-        intent.putExtra(Intent.EXTRA_TEXT, "Hola Abri Registro");
-        startActivity(intent);
     }
 
     private void populateAutoComplete() {
@@ -288,7 +273,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(layout_login.this,
+                new ArrayAdapter<>(layout_register.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
@@ -303,9 +288,6 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
 
         int ADDRESS = 0;
         int IS_PRIMARY = 1;
-    }
-    private void incorrectEmail(){
-        mEmailView.setError(getString(R.string.error_field_required));
     }
 
     /**
@@ -324,6 +306,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
 
             try {
                 // Simulate network access.
@@ -340,8 +323,8 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
                 }
             }
 
-            incorrectEmail();
-            return false;
+            // TODO: register the new account here.
+            return true;
         }
 
         @Override
@@ -350,9 +333,10 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             showProgress(false);
 
             if (success) {
-                //TODO: Colocar acciones para cuando inicia sesión.
+                finish();
             } else {
-                mEmailView.setError(getString(R.string.error_invalid_email));
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
             }
         }
 
