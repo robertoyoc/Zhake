@@ -3,6 +3,7 @@ package talentics.com.mx.zhake;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -63,7 +64,6 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-    private TextView Texto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,9 +93,22 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             }
         });
 
+        Button mRegisterButton = (Button) findViewById(R.id.register_button);
+        mRegisterButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                callRegister();
+            }
+        });
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-        Texto = (TextView) findViewById(R.id.textView);
+    }
+    private void callRegister(){
+        Intent intent = new Intent(this, DisplayMessageActivity.class);
+        EditText editText = (EditText) findViewById(R.id.edit_message);
+        String message = editText.getText().toString();
+        intent.putExtra(EXTRA_MESSAGE, message);
+        startActivity(intent);
     }
 
     private void populateAutoComplete() {
@@ -313,7 +326,6 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
             try {
                 // Simulate network access.
@@ -340,7 +352,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             showProgress(false);
 
             if (success) {
-                Texto.setText("Inicié Sesión");
+                //TODO: Colocar acciones para cuando inicia sesión.
             } else {
                 mEmailView.setError(getString(R.string.error_invalid_email));
             }
