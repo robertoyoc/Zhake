@@ -99,15 +99,15 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
         mRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                callRegister();
+                callRegister("");
             }
         });
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
     }
-    private void callRegister(){
+    private void callRegister(String mess){
         Intent intent = new Intent(this, layout_register.class);
-        intent.putExtra(Intent.EXTRA_TEXT, "Hola Abri Registro");
+        intent.putExtra(Intent.EXTRA_TEXT, mess);
         startActivity(intent);
     }
 
@@ -354,7 +354,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             if (success) {
                 //TODO: Colocar acciones para cuando inicia sesión.
             } else {
-                mEmailView.setError(getString(R.string.error_invalid_email));
+                callRegister(mEmail.toString());
             }
         }
 
