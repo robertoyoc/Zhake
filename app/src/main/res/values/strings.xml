@@ -31,6 +31,8 @@
     <string name="prompt_lname">Apellido</string>
     <string name="prompt_age">Edad</string>
     <string name="prompt_sex">Sexo (M o F)</string>
+    <string name="prompt_new_email">Email</string>
+    <string name="prompt_new_pass">Contraseña</string>
     <string name="prompt_street">Calle</string>
     <string name="prompt_num">Número</string>
     <string name="prompt_col">Colonia</string>
