@@ -3,7 +3,13 @@ package talentics.com.mx.zhake;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -67,8 +73,48 @@ public class layout_register extends AppCompatActivity {
         attemptRegister();
         return true;
     }
+
+     /* Database information */
+
+
+    // Table Names
+    private static final String TABLE_USERS = "users";
+    private static final String TABLE_PRICES = "prices";
+
+    // Common column names
+    private static final String KEY_ID = "id";
+
+    // users Table - column names
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_PASS = "pass";
+    private static final String KEY_FNAME = "fname";
+    private static final String KEY_LNAME = "lname";
+    private static final String KEY_SEX = "sex";
+    private static final String KEY_AGE = "age";
+    private static final String KEY_STREET = "street";
+    private static final String KEY_NUMBER = "number";
+    private static final String KEY_COL = "col";
+    private static final String KEY_CITY = "city";
+    private static final String KEY_STATE = "state";
+    private static final String KEY_CP = "cp";
+
+    // prices Table - column names
+    private static final String KEY_NAME = "name";
+    private static final String KEY_PRICE = "price";
+
+    UserRegisterTask mRegisterTask = null;
+
+    private void callRegister(String mess){
+        Intent intent = new Intent(this, layout_register.class);
+        intent.putExtra(Intent.EXTRA_TEXT, mess);
+        startActivity(intent);
+    }
+
     private void attemptRegister(){
-        /*Reset errors*/
+
+        if (mRegisterTask != null) {
+            return;
+        }
 
         /*Capture data */
         EditText[] Fields = new EditText[12];
@@ -132,15 +178,83 @@ public class layout_register extends AppCompatActivity {
             return;
         }
 
-
         showProgress(true);
 
-        //TODO: Set new action in login
+        ContentValues values = new ContentValues();
+        values.put(KEY_FNAME, Values[0]);
+        values.put(KEY_LNAME, Values[1]);
+        values.put(KEY_SEX, Values[2]);
+        values.put(KEY_AGE, Values[3]);
+        values.put(KEY_EMAIL, Values[4]);
+        values.put(KEY_PASS, Values[5]);
+        values.put(KEY_STREET, Values[6]);
+        values.put(KEY_NUMBER, Values[7]);
+        values.put(KEY_COL, Values[8]);
+        values.put(KEY_CITY, Values[9]);
+        values.put(KEY_STATE, Values[10]);
+        values.put(KEY_CP, Values[11]);
+
+        mRegisterTask = new UserRegisterTask(values);
+        mRegisterTask.execute((Void) null);
 
 
 
 
     }
+
+    private void callInit(){
+        Intent intent = new Intent(this, layout_login.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final ContentValues data;
+        UserRegisterTask(ContentValues content) {
+            data= content;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+
+            try {
+                // Simulate network access.
+                Thread.sleep(3000);
+            } catch (InterruptedException e) {
+                return false;
+            }
+            FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(getApplicationContext());
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+            long newRowId = 0;
+            newRowId = db.insert(TABLE_USERS, null, data);
+            if(newRowId != 0){
+                return true;
+            }else return false;
+
+
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mRegisterTask = null;
+            showProgress(false);
+            if (success) {
+                callInit();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mRegisterTask = null;
+            showProgress(false);
+        }
+    }
+
+
+
+
 
     /* Functions to validate fields */
     private boolean isEmpty(EditText field){
