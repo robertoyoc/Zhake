@@ -16,6 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".layout_login"
+            android:screenOrientation="portrait"
             android:label="@string/layout_sign_in">
             <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
@@ -25,9 +26,11 @@
         </activity>
         <activity
             android:name=".layout_register"
+            android:screenOrientation="portrait"
             android:label="@string/layout_register" />
         <activity
             android:name=".layout_request"
+            android:screenOrientation="portrait"
             android:label="@string/layout_request"/>
     </application>
 

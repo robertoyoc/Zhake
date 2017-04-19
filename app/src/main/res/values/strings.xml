@@ -44,5 +44,8 @@
     <string name="error_invalid_sex">El sexo no es válido</string>
     <string name="errro_invalid_age">La edad no es válida</string>
 
+      <!-- Strings related to Request -->
+    <string name="medium">Mediano</string>
+    <string name="big">Grande</string>
 
 </resources>

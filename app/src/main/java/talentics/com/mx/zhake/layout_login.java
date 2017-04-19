@@ -147,7 +147,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
         startActivity(intent);
     }
     private void callRequest(){
-        Intent intent = new Intent(this, layout_register.class);
+        Intent intent = new Intent(this, layout_request.class);
         startActivity(intent);
         finish();
     }
@@ -454,7 +454,6 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             showProgress(false);
 
             if (success) {
-                callAlert("Bienvenido", "Te has logueado correctamente");
                 callRequest();
             }
             else{
