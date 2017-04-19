@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -85,7 +86,11 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                try {
+                    attemptLogin();
+                } catch (Exception e){
+                    callAlert("Error", e.toString());
+                }
             }
         });
 
@@ -98,46 +103,15 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
         });
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
     }
 
-    private void Consulta(){
-        FeedReaderDbHelper mDbHelper = new FeedReaderDbHelper(getApplicationContext());
-        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+    public void callAlert(String title, String mess){
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
-        String[] projection = {
-                KEY_ID,
-                KEY_NAME,
-                KEY_PRICE
-        };
-
-        String selection = KEY_NAME + " = ?";
-        String[] selectionArgs = { "Leche" };
-        String sortOrder =
-                KEY_NAME + " ASC";
-
-
-        Cursor c = db.query(
-                TABLE_PRICES,                   // The table to query
-                projection,                               // The columns to return
-                selection,                                // The columns for the WHERE clause
-                selectionArgs,                            // The values for the WHERE clause
-                null,                                     // don't group the rows
-                null,                                     // don't filter by row groups
-                sortOrder                                 // The sort order
-        );
-
-
-        if(c!= null)
-            c.moveToFirst();
-        long aux = c.getLong(c.getColumnIndex(KEY_ID));
-        String aux1 = c.getString(c.getColumnIndex(KEY_NAME));
-        float aux2 = c.getFloat(c.getColumnIndex(KEY_PRICE));
-
-        String data = String.valueOf(aux) + ": "+ aux1 + ", " + String.valueOf(aux2);
-
-        TextView text = (TextView) findViewById(R.id.forgot_pass_text);
-
-        text.setText(data);
+        alert.setTitle(title);
+        alert.setMessage(mess);
+        alert.show();
     }
 
     /* Database information */
@@ -194,7 +168,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
 
     public class FeedReaderDbHelper extends SQLiteOpenHelper {
         // If you change the database schema, you must increment the database version.
-        public static final int DATABASE_VERSION = 6;
+        public static final int DATABASE_VERSION = 7;
         public static final String DATABASE_NAME = "Zhake.db";
 
         public FeedReaderDbHelper(Context context) {
@@ -241,6 +215,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             values.put(KEY_STATE, "Hidalgo");
             values.put(KEY_CP, "42080");
             db.insert(TABLE_USERS, null, values);
+
         }
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             // This database is only a cache for online data, so its upgrade policy is
@@ -325,6 +300,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
+
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
@@ -336,10 +312,15 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        }
+        else if (!isEmailValid(email)) {
             mEmailView.setError(getString(R.string.error_invalid_email));
             focusView = mEmailView;
-            cancel = true;
+        }
+        else if(TextUtils.isEmpty(password)){
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel= true;
         }
 
         if (cancel) {
@@ -455,7 +436,10 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
         int IS_PRIMARY = 1;
     }
     private void incorrectEmail(){
-        mEmailView.setError(getString(R.string.error_field_required));
+        mEmailView.setError(getString(R.string.error_incorrect_email));
+    }
+    private void incorrectPassword(){
+        mPasswordView.setError(getString(R.string.error_incorrect_password));
     }
 
     /**
@@ -472,7 +456,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             mPassword = password;
         }
 
-        protected boolean CkeckForUser(String Email, String Pass){
+        protected int CkeckForUser(String Email, String Pass){
             FeedReaderDbHelper mDbHelper = new FeedReaderDbHelper(getApplicationContext());
             SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
@@ -489,7 +473,8 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             String sortOrder =
                     KEY_EMAIL + " ASC";
 
-            Cursor c = db.query(
+            Cursor c= null;
+            c = db.query(
                     TABLE_USERS,                              // The table to query
                     projection,                               // The columns to return
                     selection,                                // The columns for the WHERE clause
@@ -499,14 +484,20 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
                     sortOrder                                 // The sort order
             );
 
-            if(c!=null){
-                c.moveToFirst();
+            if(c!=null&&c.moveToFirst()){
                 String pass = c.getString(c.getColumnIndex(KEY_PASS));
-                return pass.equals(Pass);
+                if(pass.equals(Pass)){
+                    return 0;
+                }
+                else{
+                    return 1;
+                }
             }
             else{
-                return false;
+                return 2;
             }
+
+
         }
 
         @Override
@@ -514,17 +505,24 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
 
             try {
                 // Simulate network access.
-                Thread.sleep(2000);
+                Thread.sleep(3000);
             } catch (InterruptedException e) {
                 return false;
             }
-
-            if(CkeckForUser(mEmail, mPassword)){
+            int user = CkeckForUser(mEmail, mPassword);
+            callAlert("Check", String.valueOf(user));
+            if(user==0){
                 return true;
-            }else{
+            }else if(user==1){
+                incorrectPassword();
+                return false;
+            }
+            else {
                 incorrectEmail();
                 return false;
             }
+
+
         }
 
         @Override
@@ -534,9 +532,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
 
             TextView text = (TextView) findViewById(R.id.forgot_pass_text);
             if (success) {
-                text.setText("Pasaste");
-            } else {
-                text.setText("Adiós");
+                callAlert("Bienvenido", "Te has logueado correctamente");
             }
         }
 

@@ -18,6 +18,8 @@
     <string name="permission_rationale">"El permiso de acceso a contactos es requerido para la función de rellenar correos"
     </string>
     <string name="hypervinc">¿Olvidaste tu contraseña?</string>
+
+    <string name="error_incorrect_email">Este correo no está registrado</string>
     
     <!-- Strings related to Register -->
     <string name="title_activity_layout_register">Registrar</string>
