@@ -3,6 +3,7 @@
 
     <string name="layout_register">Registrarse</string>
     <string name="layout_sign_in">Iniciar Sesión</string>
+    <string name="layout_request">Tu smoothie</string>
 
 
     <!-- Strings related to login -->
@@ -20,7 +21,7 @@
     <string name="hypervinc">¿Olvidaste tu contraseña?</string>
 
     <string name="error_incorrect_email">Este correo no está registrado</string>
-    
+
     <!-- Strings related to Register -->
     <string name="title_activity_layout_register">Registrar</string>
 
