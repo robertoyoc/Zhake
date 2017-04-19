@@ -510,7 +510,6 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
                 return false;
             }
             int user = CkeckForUser(mEmail, mPassword);
-            callAlert("Check", String.valueOf(user));
             if(user==0){
                 return true;
             }else if(user==1){
