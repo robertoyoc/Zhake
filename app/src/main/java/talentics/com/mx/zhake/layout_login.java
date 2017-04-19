@@ -52,16 +52,6 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
     private UserLoginTask mAuthTask = null;
 
     // UI references.
@@ -366,12 +356,12 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
     }
 
     private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
+
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
+
         return password.length() > 7;
     }
 
@@ -482,6 +472,43 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             mPassword = password;
         }
 
+        protected boolean CkeckForUser(String Email, String Pass){
+            FeedReaderDbHelper mDbHelper = new FeedReaderDbHelper(getApplicationContext());
+            SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+            String[] projection = {
+                    KEY_ID,
+                    KEY_EMAIL,
+                    KEY_PASS
+            };
+
+
+            String selection = KEY_EMAIL + " = ?";
+            String[] selectionArgs = { Email };
+
+            String sortOrder =
+                    KEY_EMAIL + " ASC";
+
+            Cursor c = db.query(
+                    TABLE_USERS,                              // The table to query
+                    projection,                               // The columns to return
+                    selection,                                // The columns for the WHERE clause
+                    selectionArgs,                            // The values for the WHERE clause
+                    null,                                     // don't group the rows
+                    null,                                     // don't filter by row groups
+                    sortOrder                                 // The sort order
+            );
+
+            if(c!=null){
+                c.moveToFirst();
+                String pass = c.getString(c.getColumnIndex(KEY_PASS));
+                return pass.equals(Pass);
+            }
+            else{
+                return false;
+            }
+        }
+
         @Override
         protected Boolean doInBackground(Void... params) {
 
@@ -492,16 +519,12 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
+            if(CkeckForUser(mEmail, mPassword)){
+                return true;
+            }else{
+                incorrectEmail();
+                return false;
             }
-
-            incorrectEmail();
-            return false;
         }
 
         @Override
@@ -509,10 +532,11 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             mAuthTask = null;
             showProgress(false);
 
+            TextView text = (TextView) findViewById(R.id.forgot_pass_text);
             if (success) {
-                //TODO: Colocar acciones para cuando inicia sesión.
+                text.setText("Pasaste");
             } else {
-                callRegister(mEmail.toString());
+                text.setText("Adiós");
             }
         }
 
