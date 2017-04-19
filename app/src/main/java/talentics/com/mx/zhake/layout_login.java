@@ -146,6 +146,11 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
         intent.putExtra(Intent.EXTRA_TEXT, mess);
         startActivity(intent);
     }
+    private void callRequest(){
+        Intent intent = new Intent(this, layout_register.class);
+        startActivity(intent);
+        finish();
+    }
     private void incorrectEmail(){
         mEmailView.setError(getString(R.string.error_incorrect_email));
     }
@@ -450,6 +455,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
 
             if (success) {
                 callAlert("Bienvenido", "Te has logueado correctamente");
+                callRequest();
             }
             else{
                 if(status==2){
