@@ -65,12 +65,13 @@ public class layout_request extends AppCompatActivity {
                 precio = precio + 2f;
                 if(sizeMedium) {
                     precio = precio + 35f;
-                    callOrder("Mediano,Agua,Fresas,Splenda,Granola"+ String.valueOf(precio));
+                    callOrder("Mediano,Agua,Fresas,Splenda,Granola,"+ String.valueOf(precio));
                 }
                 else{
                     precio= precio + 55f;
-                    callOrder("Grande,Agua,Fresas,Splenda,Granola"+ String.valueOf(precio));
+                    callOrder("Grande,Agua,Fresas,Splenda,Granola,"+ String.valueOf(precio));
                 }
+
             }
         });
 
@@ -89,7 +90,7 @@ public class layout_request extends AppCompatActivity {
     }
 
     private void callOrder(String mess){
-        Intent intent = new Intent(this, layout_login.class);
+        Intent intent = new Intent(this, layout_order.class);
         intent.putExtra(Intent.EXTRA_TEXT, mess);
         startActivity(intent);
     }
