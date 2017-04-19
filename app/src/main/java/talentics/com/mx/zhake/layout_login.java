@@ -238,7 +238,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
 
             ContentValues values = new ContentValues();
 
-            values.put(KEY_EMAIL, "admin@calculator.com");
+            values.put(KEY_EMAIL, "admin@zhake.com");
             values.put(KEY_PASS, "admin123");
             values.put(KEY_FNAME, "Pedro");
             values.put(KEY_LNAME, "Lopez");
@@ -372,7 +372,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 7;
     }
 
     /**
