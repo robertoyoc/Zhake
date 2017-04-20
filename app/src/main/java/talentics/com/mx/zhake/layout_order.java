@@ -170,7 +170,7 @@ public class layout_order extends AppCompatActivity {
                 return new PasswordAuthentication("zhakecompany@gmail.com", "Zhake1234");
             }
         });
-        recipient = "azroberto0924@gmail.com";
+        recipient = "zhakeorders@gmail.com";
         subject= "Nuevo pedido";
         textMessage = mess;
 
