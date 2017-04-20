@@ -58,20 +58,49 @@ public class layout_order extends AppCompatActivity {
 
         text.setText(message);
 
-
         FeedReaderDbHelper dbHelper = new FeedReaderDbHelper(getApplicationContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        String dir = "https://www.google.com.mx/maps/place/"+ addPlus(user.u_street) + "+" + user.u_number +
+                ",+" + addPlus(user.u_col) + "+" + addPlus(user.u_city) + ",+" + user.u_state;
+
+        final String html_message =
+                "<h1> Tienes un nuevo pedido </h1> <br><br>" +
+                "<p> Smothie  " + values[0] + ". </p>"+
+                "<p> Base: " + values[1] + ". </p>"+
+                "<p> Fruta(s): " + values[2] + ". </p>"+
+                "<p> Topic: " + values[3] + ". </p>"+
+                "<p> Cobertura: " + values[4] + ". </p><br>"+
+                "<p> Precio a cobrar: " + values[5] + ". </p><br><br>"+
+                "<h2> Datos del Cliente: " + " </h2>"+
+                "<p> Nombre: <br>" + user.f_name + " " + user.l_name + ". </p>"+
+                "<p> Dirección:<br>" + user.u_street + " " + user.u_number +". </p>"+
+                "<p>" + user.u_col + ", " + user.u_city + ", " + user.u_state +". </p>"+
+                "<p> Código Postal: " + user.u_cp + ". </p><br> <br>"+
+                "<p> Buscar en Google Maps: </p>"+
+                "<p> <a href=\" " + dir +"\"> " + "Buscar dirección</a> </p>";
+
+
 
 
         Button mSendOrderButton = (Button) findViewById(R.id.sendOrderButton);
         mSendOrderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendMail(message);
+                sendMail(html_message);
 
 
             }
         });
+    }
+
+    public String addPlus(String s){
+        String parts[] = s.split(" ");
+        String ret = parts[0];
+        for(int x=1; x<parts.length; x++){
+            ret = ret + "+" + parts[x];
+        }
+        return ret;
     }
     // Table Names
     private static final String TABLE_USERS = "users";

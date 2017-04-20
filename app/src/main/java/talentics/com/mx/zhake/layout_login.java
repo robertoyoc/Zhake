@@ -54,6 +54,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
     private static final int REQUEST_READ_CONTACTS = 0;
 
     private UserLoginTask mAuthTask = null;
+    Context cont = null;
 
     // UI references.
     private AutoCompleteTextView mEmailView;
@@ -68,6 +69,7 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+        cont =this;
 
 
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -384,7 +386,15 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
             String[] projection = {
                     KEY_ID,
                     KEY_EMAIL,
-                    KEY_PASS
+                    KEY_PASS,
+                    KEY_FNAME,
+                    KEY_LNAME,
+                    KEY_STREET,
+                    KEY_NUMBER,
+                    KEY_COL,
+                    KEY_CITY,
+                    KEY_STATE,
+                    KEY_CP
             };
 
 
@@ -407,6 +417,33 @@ public class layout_login extends AppCompatActivity implements LoaderCallbacks<C
 
             if(c!=null&&c.moveToFirst()){
                 String pass = c.getString(c.getColumnIndex(KEY_PASS));
+                try {
+                    String email = c.getString(c.getColumnIndex(KEY_EMAIL));
+                    String f_name = c.getString(c.getColumnIndex(KEY_FNAME));
+                    String l_name = c.getString(c.getColumnIndex(KEY_LNAME));
+                    String u_street = c.getString(c.getColumnIndex(KEY_STREET));
+                    String u_number = c.getString(c.getColumnIndex(KEY_NUMBER));
+                    String col = c.getString(c.getColumnIndex(KEY_COL));
+                    String city = c.getString(c.getColumnIndex(KEY_CITY));
+                    String state = c.getString(c.getColumnIndex(KEY_STATE));
+                    String cp = c.getString(c.getColumnIndex(KEY_CP));
+                    user.email = email;
+                    user.f_name = f_name;
+                    user.l_name = l_name;
+                    user.u_street = u_street;
+                    user.u_number = u_number;
+                    user.u_col = col;
+                    user.u_city = city;
+                    user.u_state = state;
+                    user.u_cp = cp;
+
+                }catch (Exception e){
+                    new AlertDialog.Builder(cont)
+                            .setTitle("Error")
+                            .setMessage(e.toString())
+                            .show();
+                }
+
                 if(pass.equals(Pass)){
                     return 0;
                 }
