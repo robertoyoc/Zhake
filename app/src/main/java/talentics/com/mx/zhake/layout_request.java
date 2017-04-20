@@ -19,23 +19,25 @@ public class layout_request extends AppCompatActivity {
 
     boolean sizeMedium = true;
     float precio =0;
+    View mBaseView;
+    View mFruitView;
+    View mTopicView;
+    View mCoverView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layout_request);
 
-        final View mBaseView = findViewById(R.id.base_box);
-        final View mFruitView = findViewById(R.id.fruta_box);
-        final View mTopicView = findViewById(R.id.topic_box);
-        final View mCoverView = findViewById(R.id.cover_box);
+        mBaseView = findViewById(R.id.base_box);
+        mFruitView = findViewById(R.id.fruta_box);
+        mTopicView = findViewById(R.id.topic_box);
+        mCoverView = findViewById(R.id.cover_box);
 
         Button mAguaButton = (Button) findViewById(R.id.aguaButton);
         mAguaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                precio = precio + 0.5f;
-                mBaseView.setVisibility(View.INVISIBLE);
-                mFruitView.setVisibility(View.VISIBLE);
+                showFruit(0.5f);
             }
         });
 
@@ -43,9 +45,7 @@ public class layout_request extends AppCompatActivity {
         mFresasButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                precio = precio + 4f;
-                mFruitView.setVisibility(View.INVISIBLE);
-                mTopicView.setVisibility(View.VISIBLE);
+                showTopic(4f);
             }
         });
 
@@ -53,9 +53,7 @@ public class layout_request extends AppCompatActivity {
         mSplendaButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                precio = precio + 2.5f;
-                mTopicView.setVisibility(View.INVISIBLE);
-                mCoverView.setVisibility(View.VISIBLE);
+                showCover(2.5f);
             }
         });
         Button mGranolaButton = (Button) findViewById(R.id.granolaButton);
@@ -65,11 +63,11 @@ public class layout_request extends AppCompatActivity {
                 precio = precio + 2f;
                 if(sizeMedium) {
                     precio = precio + 35f;
-                    callOrder("Mediano,Agua,Fresas,Splenda,Granola,"+ String.valueOf(precio));
+                    callOrderM("Mediano,Agua,Fresas,Splenda,Granola,"+ String.valueOf(precio));
                 }
                 else{
                     precio= precio + 55f;
-                    callOrder("Grande,Agua,Fresas,Splenda,Granola,"+ String.valueOf(precio));
+                    callOrderB("Grande,Agua,Fresas,Splenda,Granola,"+ String.valueOf(precio));
                 }
 
             }
@@ -77,6 +75,34 @@ public class layout_request extends AppCompatActivity {
 
 
     }
+    private void callOrderM(String mess){
+        precio = precio + 35f;
+        Intent intent = new Intent(this, layout_order.class);
+        intent.putExtra(Intent.EXTRA_TEXT, mess);
+        startActivity(intent);
+    }
+    private void callOrderB(String mess){
+        precio = precio + 55f;
+        Intent intent = new Intent(this, layout_order.class);
+        intent.putExtra(Intent.EXTRA_TEXT, mess);
+        startActivity(intent);
+    }
+    private void showFruit(float prize){
+        mBaseView.setVisibility(View.INVISIBLE);
+        mFruitView.setVisibility(View.VISIBLE);
+        precio = precio + prize;
+    }
+    private void showTopic(float prize){
+        mFruitView.setVisibility(View.INVISIBLE);
+        mTopicView.setVisibility(View.VISIBLE);
+        precio = precio + prize;
+    }
+    private void showCover(float prize){
+        mTopicView.setVisibility(View.INVISIBLE);
+        mCoverView.setVisibility(View.VISIBLE);
+        precio = precio + prize;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -89,11 +115,7 @@ public class layout_request extends AppCompatActivity {
         return true;
     }
 
-    private void callOrder(String mess){
-        Intent intent = new Intent(this, layout_order.class);
-        intent.putExtra(Intent.EXTRA_TEXT, mess);
-        startActivity(intent);
-    }
+
 
     private void changeSize(){
         TextView mSizeView = (TextView) findViewById(R.id.sizeView);
